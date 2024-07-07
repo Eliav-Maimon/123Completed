@@ -1,0 +1,7 @@
+ProducerSettings:
+  BootstrapServers: "localhost:9092"
+  PublishName: "events"
+  Message: "HELLO WORLD"
+
+TimeOutSettings: 
+  SleepTime: 1000

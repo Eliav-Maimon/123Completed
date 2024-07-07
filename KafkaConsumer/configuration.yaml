@@ -1,0 +1,9 @@
+MongoDBSettings:
+  ConnectionString: "mongodb://localhost:27017"
+  DatabaseName: "123Completed"
+  CollectionName: "events"
+
+ConsumerSettings:
+  GroupId: "test-consumer-group"
+  BootstrapServers: "localhost:9092"
+  SubscribeName: "events"
