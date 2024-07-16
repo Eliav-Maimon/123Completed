@@ -6,7 +6,7 @@ using StackExchange.Redis;
 
 class Program
 {
-    private static readonly string settingsFile = "../../../../MongoToRedis/configuration.yaml";
+    private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
     private static IMongoCollection<BsonDocument> mongoCollection;
     private static IMongoCollection<BsonDocument> timestampUnit;
 
@@ -73,7 +73,7 @@ class Program
                 var timestamp = doc[nameof(EventMessage.Timestamp)];
                 var reporterId = doc[nameof(EventMessage.ReporterId)].AsInt32.ToString();
                 var key = $"{reporterId}:{timestamp:yyyyMMddHHmmss}";
-                
+
                 var value = doc.ToJson();
 
                 redisDb.StringSet(key, value);

@@ -5,8 +5,6 @@ using KafkaProducer.Settings;
 
 class Program
 {
-    // private static readonly string settingsFile = "../../../../MongoToRedis/configuration.yaml";
-    // private static readonly string settingsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration.yaml");
     private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
 
     static async Task Main(string[] args)

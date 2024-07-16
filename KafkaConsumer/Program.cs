@@ -6,8 +6,7 @@ using MongoDB.Driver;
 
 class Program
 {
-    private static readonly string settingsFile = "../../../configuration.yaml";
-
+    private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
     static void Main(string[] args)
     {
 
