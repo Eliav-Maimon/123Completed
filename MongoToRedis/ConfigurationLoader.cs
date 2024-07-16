@@ -24,7 +24,6 @@ namespace MongoToRedis
                 if (yamlObject.ContainsKey(sectionName))
                 {
                     var settings = new TSettings();
-
                     var properties = typeof(TSettings).GetProperties();
 
                     foreach (var prop in properties)
@@ -32,25 +31,19 @@ namespace MongoToRedis
                         var value = yamlObject[sectionName].GetValueOrDefault(prop.Name);
                         if (value != null)
                         {
-                            var propertyType = prop.PropertyType;
-                            object convertedValue = null;
-
-                            if (propertyType == typeof(string))
+                            try
                             {
-                                convertedValue = value;
-                            }
-                            else if (propertyType == typeof(int))
-                            {
-                                convertedValue = int.Parse(value);
-                            }
-                            else if (propertyType == typeof(bool))
-                            {
-                                convertedValue = bool.Parse(value);
-                            }
-
-                            if (convertedValue != null)
-                            {
+                                var propertyType = prop.PropertyType;
+                                var convertedValue = Convert.ChangeType(value, propertyType);
                                 prop.SetValue(settings, convertedValue);
+                            }
+                            catch (InvalidCastException)
+                            {
+                                Console.WriteLine($"Unable to convert value of property {prop.Name} to type {prop.PropertyType}");
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine($"Invalid format for property {prop.Name} of type {prop.PropertyType}");
                             }
                         }
                     }

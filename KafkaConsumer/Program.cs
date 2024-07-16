@@ -14,12 +14,13 @@ class Program
         var consumerSettings = ConfigurationLoader.LoadSettings<ConsumerSettings>(settingsFile, nameof(ConsumerSettings));
         var mongoDBSettings = ConfigurationLoader.LoadSettings<MongoDBSettings>(settingsFile, nameof(MongoDBSettings));
 
-        
+
         var config = new ConsumerConfig
         {
             GroupId = consumerSettings.GroupId,
             BootstrapServers = consumerSettings.BootstrapServers,
-            AutoOffsetReset = AutoOffsetReset.Earliest
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = false
         };
 
         using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
@@ -43,6 +44,7 @@ class Program
                         if (eventMessage != null)
                         {
                             collection.InsertOne(eventMessage);
+                            consumer.Commit(consumeResult);
                             Console.WriteLine($"Inserted event into MongoDB: {eventMessage}");
                         }
                     }

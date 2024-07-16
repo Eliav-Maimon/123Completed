@@ -34,37 +34,53 @@ class Program
             var latestTimestampDoc = await timestampUnit.Find(new BsonDocument()).FirstOrDefaultAsync();
             if (latestTimestampDoc != null)
             {
-                var timestampStr = latestTimestampDoc["Timestamp"].AsString;
-                var parts = timestampStr.Split(':');
-                sequentialNumber = int.Parse(parts[0]);
-
-                if (DateTime.TryParseExact(parts[1], "yyyy-MM-ddTHH:mm:ss", null, System.Globalization.DateTimeStyles.None, out var parsedDate))
+                if (latestTimestampDoc.TryGetValue(nameof(EventMessage.Timestamp), out BsonValue timestampBsonValue))
                 {
-                    latestDateTime = parsedDate;
+                    if (timestampBsonValue.BsonType == BsonType.String)
+                    {
+                        var timestampStr = timestampBsonValue.AsString;
+                        var parts = timestampStr.Split(new char[] { ':' }, 2);
+                        sequentialNumber = int.Parse(parts[0]);
+
+                        if (DateTime.TryParse(parts[1], out var parsedDate))
+                        {
+                            latestDateTime = parsedDate;
+                        }
+                    }
+                    else if (timestampBsonValue.BsonType == BsonType.DateTime)
+                    {
+                        latestDateTime = timestampBsonValue.ToUniversalTime();
+                    }
+                    else
+                    {
+                        throw new FormatException("Unsupported BsonType for Timestamp field.");
+                    }
                 }
             }
 
             var filter = Builders<BsonDocument>.Filter.Or(
-                Builders<BsonDocument>.Filter.Gt("Timestamp", latestDateTime),
+                Builders<BsonDocument>.Filter.Gt(nameof(EventMessage.Timestamp), latestDateTime),
                 Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("Timestamp", latestDateTime),
-                    Builders<BsonDocument>.Filter.Gt("ReporterId", sequentialNumber)
+                    Builders<BsonDocument>.Filter.Eq(nameof(EventMessage.Timestamp), latestDateTime),
+                    Builders<BsonDocument>.Filter.Gt(nameof(EventMessage.ReporterId), sequentialNumber)
                 )
             );
 
-            var newDocuments = mongoCollection.Find(filter).Sort(Builders<BsonDocument>.Sort.Ascending("Timestamp")).ToList();
+            var newDocuments = mongoCollection.Find(filter).Sort(Builders<BsonDocument>.Sort.Ascending(nameof(EventMessage.Timestamp))).ToList();
 
             foreach (var doc in newDocuments)
             {
-                var timestamp = doc["Timestamp"];
-                var reporterId = doc["ReporterId"].AsInt32.ToString();
+                var timestamp = doc[nameof(EventMessage.Timestamp)];
+                var reporterId = doc[nameof(EventMessage.ReporterId)].AsInt32.ToString();
                 var key = $"{reporterId}:{timestamp:yyyyMMddHHmmss}";
+                
                 var value = doc.ToJson();
 
                 redisDb.StringSet(key, value);
 
                 var newTimestampStr = $"{reporterId}:{timestamp:yyyy-MM-ddTHH:mm:ss}";
-                var newTimestampDoc = new BsonDocument { { "Timestamp", newTimestampStr } };
+
+                var newTimestampDoc = new BsonDocument { { nameof(EventMessage.Timestamp), newTimestampStr } };
                 await timestampUnit.ReplaceOneAsync(new BsonDocument(), newTimestampDoc, new ReplaceOptions { IsUpsert = true });
             }
 

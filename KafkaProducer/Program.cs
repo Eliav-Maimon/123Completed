@@ -11,8 +11,6 @@ class Program
 
     static async Task Main(string[] args)
     {
-        // Start();
-
         var kafkaSettings = ConfigurationLoader.LoadSettings<ProducerSettings>(settingsFile, nameof(ProducerSettings));
         var timeOutSettings = ConfigurationLoader.LoadSettings<TimeOutSettings>(settingsFile, nameof(TimeOutSettings));
 

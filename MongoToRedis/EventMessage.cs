@@ -1,4 +1,4 @@
-namespace KafkaProducer
+namespace MongoToRedis
 {
     public class EventMessage
     {

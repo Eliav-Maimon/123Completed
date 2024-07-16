@@ -7,7 +7,7 @@ RedisSettings:
   ConnectionString: "localhost:6379"
 
 TimeOutSettings:
-  SleepTime: 3000
+  SleepTime: 30000
 
 TimestampSettings:
   Name: "LatestTimestamps"
