@@ -6,7 +6,8 @@ using StackExchange.Redis;
 
 class Program
 {
-    private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    // private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    private static readonly string settingsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration.yaml");
     private static IMongoCollection<BsonDocument> mongoCollection;
     private static IMongoCollection<BsonDocument> timestampUnit;
 

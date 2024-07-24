@@ -1,9 +1,11 @@
 MongoDBSettings:
-  ConnectionString: "mongodb://localhost:27017"
+  ConnectionString: "mongodb://admin:password@host.docker.internal:27017"
+  # ConnectionString: "mongodb://admin:password@localhost:27017"
   DatabaseName: "123Completed"
   CollectionName: "events"
 
 ConsumerSettings:
   GroupId: "test-consumer-group"
-  BootstrapServers: "localhost:9092"
+  BootstrapServers: "host.docker.internal:9092"
+  # BootstrapServers: "kafka:9092"
   SubscribeName: "events"

@@ -5,7 +5,8 @@ using KafkaProducer.Settings;
 
 class Program
 {
-    private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    // private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    private static readonly string settingsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration.yaml");
 
     static async Task Main(string[] args)
     {
@@ -16,18 +17,11 @@ class Program
 
         using (var producer = new ProducerBuilder<Null, string>(config).Build())
         {
-            int reporterId = 1;
+            EventFactory eventFactory = new();
 
             while (true)
             {
-                EventMessage eventMessage = new EventMessage()
-                {
-                    ReporterId = reporterId,
-                    Timestamp = DateTime.UtcNow,
-                    MetricId = new Random().Next(1, 11),
-                    MetricValue = new Random().Next(1, 101),
-                    Message = kafkaSettings.Message
-                };
+                EventMessage eventMessage = eventFactory.CreateEvent();
 
                 var jsonString = JsonSerializer.Serialize(eventMessage);
 
@@ -42,8 +36,6 @@ class Program
                         Console.WriteLine($"Sent: {jsonString}");
                     }
                 });
-
-                reporterId++;
 
                 await Task.Delay(timeOutSettings.SleepTime);
             }

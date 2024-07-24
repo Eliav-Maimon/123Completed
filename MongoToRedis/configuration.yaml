@@ -1,10 +1,10 @@
 MongoDBSettings:
-  ConnectionString: "mongodb://localhost:27017"
+  ConnectionString: "mongodb://admin:password@host.docker.internal:27017"
   DatabaseName: "123Completed"
   CollectionName: "events"
 
 RedisSettings:
-  ConnectionString: "localhost:6379"
+  ConnectionString: "host.docker.internal:6379"
 
 TimeOutSettings:
   SleepTime: 30000

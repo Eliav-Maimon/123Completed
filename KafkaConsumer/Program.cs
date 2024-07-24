@@ -6,13 +6,12 @@ using MongoDB.Driver;
 
 class Program
 {
-    private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    // private static readonly string settingsFile = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "configuration.yaml");
+    private static readonly string settingsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration.yaml");
     static void Main(string[] args)
     {
-
         var consumerSettings = ConfigurationLoader.LoadSettings<ConsumerSettings>(settingsFile, nameof(ConsumerSettings));
         var mongoDBSettings = ConfigurationLoader.LoadSettings<MongoDBSettings>(settingsFile, nameof(MongoDBSettings));
-
 
         var config = new ConsumerConfig
         {

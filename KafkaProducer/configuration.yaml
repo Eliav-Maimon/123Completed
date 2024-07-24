@@ -1,7 +1,16 @@
 ProducerSettings:
-  BootstrapServers: "localhost:9092"
+  BootstrapServers: "host.docker.internal:9092"
+  # BootstrapServers: "kafka:9092"
   PublishName: "events"
+
+EventMessageSettings:
   Message: "HELLO WORLD"
+  InitialReporterId: 1
+  ReporterIdIncrement: 1
+  RandomStartMetricId: 1
+  RandomEndMetricId: 11
+  RandomStartMetricValue: 1
+  RandomEndMetricValue: 101
 
 TimeOutSettings: 
   SleepTime: 1000
