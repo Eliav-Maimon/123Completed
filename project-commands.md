@@ -1,3 +1,6 @@
+# Create the images without the cache
+docker build --no-cache -t kafka-producer:latest .
+
 # Create Image
 docker build -t kafka-producer .
 
@@ -11,9 +14,13 @@ docker ps
 docker-compose -f Kafka.yaml up -d
 
 # Stop kafka and zookeeper
+docker-compose -f Kafka.yaml stop
+
+# Stop kafka and zookeeper and delete the containers
 docker-compose -f Kafka.yaml down
 
 # Create new topic
+docker-compose -f Kafka.yaml down
 docker exec 123completed-kafka-1 /usr/bin/kafka-topics --create --topic events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 # Delete topic from kafka
@@ -85,10 +92,10 @@ exit
 
 
 # Start ETL container
-docker start mongo-to-redis
+docker start mongoToRedis
 
 # Stop ETL container
-docker stop mongo-to-redis
+docker stop mongoToRedis
 
 
 # See the logs

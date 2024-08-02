@@ -2,5 +2,4 @@ namespace MongoToRedis.Settings;
 public class TimestampSettings
 {
     public string Name { get; init; }
-    public string TimeFormat { get; init; }
 }
